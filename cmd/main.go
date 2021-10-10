@@ -1,14 +1,22 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	r := gin.Default()
 
-	fmt.Println("Server started at :3000")
-	if err := http.ListenAndServe(":3000", nil); err != nil {
+	r.Use(static.Serve("/", static.LocalFile("dist", false)))
+
+	r.GET("/api/hello", func(context *gin.Context) {
+		context.JSON(200, gin.H{
+			"message": "hello",
+		})
+	})
+
+	if err := r.Run(":3000"); err != nil {
 		panic(err)
 	}
 }
